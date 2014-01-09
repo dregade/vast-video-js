@@ -291,23 +291,42 @@
 	},
 	
 	initAds : function () {
-		var options = this._options();
-		var _f = this._proxy(this, this.initAds);
-		if (this._player.readyState !== 4) { //HAVE_ENOUGH_DATA
+		var _v = this._player.values;
+
+		//if (this._player.readyState != 4) { //HAVE_ENOUGH_DATA
+		if (!this._player.currentSrc()) { //HAVE_ENOUGH_DATA
+			_v.waitingForSrc = true;
+			var _f = this._proxy(this, this.initAdsWaitSrc);
 			this._player.on('canplaythrough', _f);
 			this._player.on('canplay', _f);
 			this._player.on('loadeddata', _f);
 			this._player.on('loadedmetadata', _f);
 			this._player.on('loadstart', _f);
-			return;
 		}
 		else {
-			this._player.off('canplaythrough', _f);
-			this._player.off('canplay', _f);
-			this._player.off('loadeddata', _f);
-			this._player.off('loadedmetadata', _f);
-			this._player.off('loadstart', _f);
+			_v.waitingForSrc = false;
+			this.initAdsHasSrc();
 		}
+	},
+
+	initAdsWaitSrc : function () {
+		var _v = this._player.values;
+		if( ! _v.waitingForSrc )
+			return;
+        
+		_v.waitingForSrc = false;
+		var _f = this._proxy(this, this.initAdsWaitSrc);
+		this._player.off('canplaythrough', _f);
+		this._player.off('canplay', _f);
+		this._player.off('loadeddata', _f);
+		this._player.off('loadedmetadata', _f);
+		this._player.off('loadstart', _f);
+
+		this.initAdsHasSrc();
+	},
+
+	initAdsHasSrc : function () {
+		var options = this._options();
 
 		if (!options.ads || 
 		    !options.ads.hasOwnProperty('schedule') || 
@@ -326,7 +345,7 @@
 		_v.api = '';
 		_v.paused = false;
 		_v.xdrMethod = '';
-		
+
 		try {
 			//change source fo itself for events fireing: http://dev.opera.com/articles/view/consistent-event-firing-with-html5-video/
 			if (window.opera) {
@@ -337,11 +356,11 @@
 			if (options.ads.skipAd.enabled)
 				_v.skipAd = options.ads.skipAd.timeOut || 3;
 		} catch (e) {}
-		
+
 		//window.counterOfStreams = 0;
 		this.adsRequest(options.ads);
 	},
-
+    
 	adSlot: function (_type,_time) {
 		var a = {};
 		a.type = _type;
