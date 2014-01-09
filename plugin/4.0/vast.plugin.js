@@ -292,7 +292,23 @@
 	
 	initAds : function () {
 		var options = this._options();
-		
+		var _f = this._proxy(this, this.initAds);
+		if (this._player.readyState !== 4) { //HAVE_ENOUGH_DATA
+			this._player.on('canplaythrough', _f);
+			this._player.on('canplay', _f);
+			this._player.on('loadeddata', _f);
+			this._player.on('loadedmetadata', _f);
+			this._player.on('loadstart', _f);
+			return;
+		}
+		else {
+			this._player.off('canplaythrough', _f);
+			this._player.off('canplay', _f);
+			this._player.off('loadeddata', _f);
+			this._player.off('loadedmetadata', _f);
+			this._player.off('loadstart', _f);
+		}
+
 		if (!options.ads || 
 		    !options.ads.hasOwnProperty('schedule') || 
 		    !options.ads['schedule'].length ||
