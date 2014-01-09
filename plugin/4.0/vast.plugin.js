@@ -180,9 +180,9 @@
 		try {
 			var a = this._el.getElementsByTagName('a')[0];
 			if (window.addEventListener) {
-				a.addEventListener('click', _V_.proxy(this, this.onClick), false);
+				a.addEventListener('click', this._player.vast._proxy(this, this.onClick), false);
 			} else {
-				a.attachEvent('onclick', _V_.proxy(this, this.onClick));
+				a.attachEvent('onclick', this._player.vast._proxy(this, this.onClick));
 			}
 		} catch (e) {}
 	},
