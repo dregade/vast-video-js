@@ -188,10 +188,16 @@
 	},
 
 	onClick: function () {
-		if (this._player.vast)
-			this._player.vast.onClick();
-		else
-			this.hide();
+		if( this._player.paused() ) {
+			e.preventDefault();
+			this._player.play();
+		}
+		else {
+			if (this._player.vast)
+				this._player.vast.onClick();
+			else
+				this.hide();
+		}
 	}
     };
 
