@@ -101,14 +101,14 @@
 	},
 
 	_fadeIn: function () {
-		if (typeof this.fideIn == 'function')
-			return this.fideIn();
+		if (typeof this.fadeIn == 'function')
+			return this.fadeIn();
 		this._el.style.display = 'block';
         },
 
 	_fadeOut: function () {
-		if (typeof this.fideOut == 'function')
-			return this.fideOut();
+		if (typeof this.fadeOut == 'function')
+			return this.fadeOut();
 		this._el.style.display = 'none';
 	},
 
