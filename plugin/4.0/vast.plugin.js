@@ -741,6 +741,8 @@
 		var _v = this._player.values;
 		var slot = this.slotForCurrentTime(Math.floor(this._player.currentTime()));
 		if (slot) {
+			//Fire event ads playing
+			this._player.trigger('adsstart');
 			slot.seen = true;
 			_v.tempTime = this._player.currentTime();
 			this._player.off('timeupdate', this._proxy(this, this.showAdSlots));
@@ -752,7 +754,9 @@
 	// @event
 	resumePlayBackAfterSlotShow : function () {
 		var _v =  this._player.values;
-		
+		//Fire event ads ended
+		this._player.trigger('adsend');
+        
 		this._player.off('ended', this._proxy(this, this.resumePlayBackAfterSlotShow));
 		this._player.off('timeupdate', this._proxy(this, this.callSlotEvents));
 		this._player.off('volumechange', this._proxy(this, this.onMute));
